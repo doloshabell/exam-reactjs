@@ -13,25 +13,30 @@ const Auth = () => {
 					let value = JSON.parse(user.value)
 					console.log(value)
 					console.log(value.expired_at)
+					console.log(value.position_name)
 					console.log(new Date().getTime())
 					if (value.expired_at >= new Date().getTime()) {
 						navigate("/login")
 					}
 					else {
-						if (location.pathname == "/") {
-							navigate("/purchasing")
+						if (window.location.pathname === "/") {
+							if (value.position_name === "Purchasing") {
+								navigate("/purchasing")
+							} else if (value.position_name === "Salesman") {
+								navigate("/sales")
+							}
 						}
 					}
 				}
 			}, error => {
 				navigate("/login")
 			}
-		)
-  }, [])
+			)
+	}, [])
 
-  return (
-  	<div></div>
-  )
+	return (
+		<div></div>
+	)
 }
 
 export default Auth
