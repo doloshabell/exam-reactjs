@@ -118,6 +118,10 @@ const Index = (props) => {
     setShowSidebar(false)
   }
 
+  const goToProfile = () => {
+    navigate("/profile");
+  }
+
   return (
     <Box className="index">
       <Box sx={{ backgroundColor: "#132f61", color: "#fff", borderRadius: "0 0 15px 15px" }}>
@@ -126,6 +130,7 @@ const Index = (props) => {
             sx={{color: "#fff"}} 
             avatar={<Avatar src={"https://us.izzibook.co.id/apilapakmobil/" + session.employee_img}></Avatar>} 
             title={"Hi, " + session.employee_name} subheader={session.position_name}
+            onClick={() => goToProfile()}
           />
           <CardContent sx={{ paddingBottom: "0 !important" }}>
             <TextField 

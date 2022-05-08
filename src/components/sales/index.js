@@ -6,7 +6,6 @@ import Card from "@mui/material/Card"
 import CardHeader from "@mui/material/CardHeader"
 import CardContent from "@mui/material/CardContent"
 import CardMedia from "@mui/material/CardMedia"
-import CardActions from "@mui/material/CardActions"
 import Button from "@mui/material/Button"
 import TextField from "@mui/material/TextField"
 import InputAdornment from "@mui/material/InputAdornment"
@@ -52,7 +51,7 @@ const IndexSales = (props) => {
         .then(user => {
           if (user.value) {
             user = JSON.parse(user.value)
-            setSession(user);
+            setSession(user)
             getCarList(user)
           }
         }, error => {
@@ -104,8 +103,19 @@ const IndexSales = (props) => {
       })
   }
 
+  const handleTabChange = (e, newTabValue) => {
+    setValue(newTabValue)
+    if (newTabValue == 1 && carList.length == 0) {
+      getCarList(session)
+    }
+  }
+
   const hideSidebar = () => {
     setShowSidebar(false)
+  }
+
+  const goToProfile = () => {
+    navigate("/profile");
   }
 
   return (
@@ -116,6 +126,7 @@ const IndexSales = (props) => {
             sx={{ color: "#fff" }}
             avatar={<Avatar src={"https://us.izzibook.co.id/apilapakmobil" + session.employee_img}></Avatar>}
             title={"Hi, " + session.employee_name} subheader={session.position_name}
+            onClick={() => goToProfile()}
           />
           <CardContent sx={{ paddingBottom: "0 !important" }}>
             <TextField
@@ -138,14 +149,13 @@ const IndexSales = (props) => {
             />
           </CardContent>
         </Card>
-        <Tabs value={value} sx={{ margin: "0 30px" }}>
+        <Tabs value={value} sx={{ margin: "0 30px" }} onChange={handleTabChange}>
           <Tab label="Listing Mobil" sx={{ color: "#fff", textTransform: "none" }} />
         </Tabs>
       </Box>
-      <Box sx={{ marginLeft: "30px" }}>
-        <h1>Produk Terbaru</h1>
-      </Box>
-      <Box sx={{ display: value == 0 ? "block" : "none", marginBottom: "20px" }}>
+      <br />
+      <Box sx={{ display: value == 0 ? "block" : "none" }}>
+        <Typography variant="h1" gutterBottom sx={{ fontSize: "30px", fontWeight: "bold", marginLeft: "30px" }}>Produk Terbaru</Typography>
         {carList.map((item) =>
           <Card sx={{ display: "flex", flexDirection: "row", boxShadow: "3", width: "95%", borderRadius: "0px 10px 10px 0px", marginBottom: "10px" }}>
             <CardMedia
@@ -165,7 +175,7 @@ const IndexSales = (props) => {
             </CardContent>
           </Card>
         )}
-        <br /><br />
+        <br /><br /><br />
       </Box>
       <Fab color="primary" sx={{ position: "fixed", bottom: "25px", right: "25px" }}><DirectionsCarIcon /></Fab>
       <Sidebar showSidebar={showSidebar} hideSidebar={() => hideSidebar()} />
