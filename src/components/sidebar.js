@@ -21,6 +21,10 @@ const Sidebar = (props) => {
     )
   }
 
+  const goToProfile = () => {
+    navigate("/profile");
+  }
+
   return (
     <Drawer anchor="left" open={props.showSidebar} onClose={() => props.hideSidebar()}>
       <List>
@@ -30,7 +34,7 @@ const Sidebar = (props) => {
           </ListItemIcon>
           <ListItemText primary="Home" />
         </ListItemButton>
-        <ListItemButton>
+        <ListItemButton onClick={goToProfile}>
           <ListItemIcon>
             <AccountCircleIcon />
           </ListItemIcon>

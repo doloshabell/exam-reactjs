@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from "react"
 import { Storage } from "@capacitor/storage"
-import { Avatar, Box, Card, CardHeader, IconButton, InputAdornment, InputLabel, Stack, TextField, Typography, Visibility, VisibilityOff } from "@mui/material"
+import { Avatar, Box, Card, CardHeader, IconButton, InputAdornment, InputLabel, Stack, TextField, Typography } from "@mui/material"
 import ArrowBackIosRoundedIcon from "@mui/icons-material/ArrowBackIosRounded"
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded"
 import PersonIcon from '@mui/icons-material/Person';
 import CallSharpIcon from '@mui/icons-material/CallSharp';
+import LockIcon from '@mui/icons-material/Lock';
+import { navigate } from "gatsby"
 import Sidebar from "../sidebar"
 import Loader from "../loader"
+import ChangePassword from "../changepassword"
 
 const IndexProfile = (props) => {
   const [showSidebar, setShowSidebar] = useState(false)
+  const [showChangePassword, setShowChangePassword] = useState(false)
   const [session, setSession] = useState({
     expired_at: 0,
     employee_code: "",
@@ -48,14 +52,42 @@ const IndexProfile = (props) => {
     setShowSidebar(false)
   }
 
+  const openChangePassword = () => {
+    setShowChangePassword(true)
+  }
+
+  const hideChangePassword = () => {
+    setShowChangePassword(false)
+  }
+
+  const backToHome = () => {
+    navigate("/")
+  }
+
+  const logout = () => {
+    Storage.remove({ key: "user" })
+      .then(user => {
+        navigate("/login")
+      }, error => {
+        console.log(error)
+      }
+      )
+  }
+
   return (
     <Box className="index">
       <Box sx={{ backgroundColor: "#132f61", color: "#fff", paddingBottom: "15px", borderRadius: "0 0 15px 15px" }}>
-        <Typography variant="body2" gutterBottom sx={{ verticalAlign: "top", fontSize: "27px", fontWeight: "bold", marginLeft: "30px", paddingTop: "15px" }}>
-          <ArrowBackIosRoundedIcon sx={{ verticalAlign: "middle" }} /> User Profile <LogoutRoundedIcon sx={{ verticalAlign: "middle", paddingTop: "8px", float: "right", marginRight: "40px" }} />
+        <Typography variant="body2" gutterBottom sx={{ verticalAlign: "top", fontSize: "27px", fontWeight: "bold", marginLeft: "20px", paddingTop: "15px" }}>
+          <IconButton onClick={() => backToHome()}>
+            <ArrowBackIosRoundedIcon sx={{ verticalAlign: "middle", color: "white" }} />
+          </IconButton>
+          User Profile
+          <IconButton onClick={logout} sx={{float: "right", margin: "0 20px 0 0"}}>
+            <LogoutRoundedIcon sx={{ color:"white", verticalAlign: "middle" }} />
+          </IconButton>
         </Typography>
       </Box>
-      <Card sx={{ backgroundColor: "#b8c4db", color: "#fff", padding: "25px", marginTop: "-15px", position: "relative", zIndex: "-1", boxShadow: "none" }}>
+      <Card sx={{ backgroundColor: "#b8c4db", borderRadius: "0", color: "#fff", padding: "25px", marginTop: "-15px", position: "relative", zIndex: "-1", boxShadow: "none" }}>
         <CardHeader
           sx={{ color: "#fff" }}
           avatar={<Avatar sx={{ width: 120, height: 120, marginTop: "30px", marginBottom: "20px" }} src={"https://us.izzibook.co.id/apilapakmobil/" + session.employee_img}></Avatar>}
@@ -86,6 +118,14 @@ const IndexProfile = (props) => {
             type={"password"}
             variant="standard"
             value={password}
+            InputProps={{
+              endAdornment:
+                <InputAdornment position="end">
+                  <IconButton onClick={() => openChangePassword()}>
+                    <LockIcon />
+                  </IconButton>
+                </InputAdornment>
+            }}
           />
           <br />
           <InputLabel>Kode</InputLabel>
@@ -94,6 +134,7 @@ const IndexProfile = (props) => {
         </Stack>
       </Box>
       <Sidebar showSidebar={showSidebar} hideSidebar={() => hideSidebar()} />
+      <ChangePassword showChangePassword={showChangePassword} hideChangePassword={() => hideChangePassword()} />
       <Loader open={loading} />
     </Box>
   )
